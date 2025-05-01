@@ -38,7 +38,7 @@ Classification Head (MLP) + Dual Loss (Eq. 14)      ← implemented by P4
 - **P2(Ghalia): Data & Preprocessing**  
   Implements EEG cleaning + graph construction. Uses MNE + PyPREP. See `data_pipeline/`.
 
-- **P3&P1(Habibata): Model Implementation**  
+- **P3&P1(Habibata et Zeina): Model Implementation**  
   Codes `tokenizer.py`, `drofe.py`, `transformer.py`, `xaiguided_transformer.py`, `explainer.py`
 
 - **P4(Nour): Training, Loss & Reproduction**  
