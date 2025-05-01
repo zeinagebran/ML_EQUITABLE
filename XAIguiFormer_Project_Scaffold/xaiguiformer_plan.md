@@ -1,7 +1,7 @@
 
 # XAIguiFormer – Project Implementation Plan
 
-This file outlines the model architecture, module breakdown, team assignments, and open questions.
+This file outlines the model architecture, module breakdown, team assignments.
 
 ## Architecture Summary
 - Connectome Tokenizer → GNN encoder per frequency band
@@ -23,15 +23,8 @@ This file outlines the model architecture, module breakdown, team assignments, a
 - report/
 
 ## Team Tasks
-Person 1 (Zeina): this plan, task delegation, architecture lead  
+Person 1: this plan, task delegation, architecture lead  
 Person 2: Preprocessing and connectome construction (see appendix A.2, A.3)  
 Person 3: Model implementation (all modules above)  
 Person 4: Training, metrics, hyperparams  
 Person 5: Report and result analysis (Tables 1–3, figures)
-
-## Questions to Clarify
-- When exactly is DeepLift applied?
-- Are dRoFE outputs complex or real?
-- Should age/gender be normalized?
-- Qexpl·Kexpl before or after softmax?
-- Exact COH/wPLI input dims for GINEConv?
