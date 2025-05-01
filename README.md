@@ -32,19 +32,19 @@ Classification Head (MLP) + Dual Loss (Eq. 14)      ← implemented by P4
 
 ## 👥 Team & Roles
 
-- **P1: Understanding and Extraction** — Paper Deep Dive & Method Lead  
+- **P1(Zeina): Understanding and Extraction** — Paper Deep Dive & Method Lead  
   `xaiguiformer_plan.md`, defines architecture, splits tasks, clarifies logic.
 
-- **P2: Data & Preprocessing**  
+- **P2(Ghalia): Data & Preprocessing**  
   Implements EEG cleaning + graph construction. Uses MNE + PyPREP. See `data_pipeline/`.
 
-- **P3: Model Implementation**  
+- **P3&P1(Habibata): Model Implementation**  
   Codes `tokenizer.py`, `drofe.py`, `transformer.py`, `xaiguided_transformer.py`, `explainer.py`
 
-- **P4: Training, Loss & Reproduction**  
+- **P4(Nour): Training, Loss & Reproduction**  
   Manages `train.py`, `loss.py`, optimizer, metrics (BAC, AUROC), training loop
 
-- **P5: Report & Writing**  
+- **P5(Safae): Report & Writing**  
   Fills out `report/README.md`, reproduces results, ablation tables, interpretability visualizations
 
 ---
