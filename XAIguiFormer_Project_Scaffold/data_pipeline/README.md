@@ -93,3 +93,4 @@ Dependencies:
 	•	numpy
 	•	pandas
 
+see `pyproject.toml`
