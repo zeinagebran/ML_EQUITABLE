@@ -61,6 +61,36 @@ Each subject's folder contains:
 - A label file (currently dummy)
 - A demographics file: `[[age, gender]]`, where gender is 1 for male, 0 for female
 
+# Usage
+
+To run the preprocessing on all subjects, execute the script from the command line:
+
+```bash
+python preprocess_tdbrain_to_npy.py
+```
+Make sure you have the following directory structure:
+
+data/
+└── TD-BRAIN-SAMPLE/
+    ├── participants.tsv
+    └── sub-XXXXXX/
+        └── ses-1/
+            └── eeg/
+                └── sub-XXXXXX_ses-1_task-restEC_eeg.vhdr
+
+You can modify the output directory or task name inside the __main__ block of the script:
+
+```bash
+output_dir = Path("/your/output/path")
+task = "restEC"  # change if needed
+```
+Dependencies:
+	•	mne
+	•	mne-connectivity
+	•	mne-icalabel
+	•	numpy
+	•	pandas
+    
 ## Notes
 - The pipeline is currently focused on the "eyes closed" resting-state task (`restEC`).
 - You may adapt the `output_dir` and `task` name as needed for other conditions or splits (train/val/test).
