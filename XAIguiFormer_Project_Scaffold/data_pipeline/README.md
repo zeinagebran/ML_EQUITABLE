@@ -70,6 +70,7 @@ python preprocess_tdbrain_to_npy.py
 ```
 Make sure you have the following directory structure:
 
+```bash
 data/
 └── TD-BRAIN-SAMPLE/
     ├── participants.tsv
@@ -77,6 +78,7 @@ data/
         └── ses-1/
             └── eeg/
                 └── sub-XXXXXX_ses-1_task-restEC_eeg.vhdr
+```
 
 You can modify the output directory or task name inside the __main__ block of the script:
 
@@ -90,7 +92,7 @@ Dependencies:
 	•	mne-icalabel
 	•	numpy
 	•	pandas
-    
+
 ## Notes
 - The pipeline is currently focused on the "eyes closed" resting-state task (`restEC`).
 - You may adapt the `output_dir` and `task` name as needed for other conditions or splits (train/val/test).
