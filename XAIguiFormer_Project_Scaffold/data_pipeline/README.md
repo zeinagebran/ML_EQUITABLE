@@ -93,6 +93,3 @@ Dependencies:
 	•	numpy
 	•	pandas
 
-## Notes
-- The pipeline is currently focused on the "eyes closed" resting-state task (`restEC`).
-- You may adapt the `output_dir` and `task` name as needed for other conditions or splits (train/val/test).
