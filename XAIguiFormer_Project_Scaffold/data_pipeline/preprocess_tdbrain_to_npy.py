@@ -91,7 +91,7 @@ def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="
     print(f"✅ Saved processed data for {subject_id}")
 
 def get_demographics(subject_id):
-    demo_path = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TD-BRAIN-SAMPLE/participants.tsv")
+    demo_path = Path("/XAIguiFormer_Project_Scaffold/data/TD-BRAIN-SAMPLE/participants.tsv")
     if not demo_path.exists():
         return None, None
     import pandas as pd
@@ -113,8 +113,8 @@ def get_demographics(subject_id):
     return age, gender
 
 if __name__ == "__main__":
-    data_root = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TD-BRAIN-SAMPLE")
-    output_dir = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TDBRAIN/raw/train")  # adapte pour val/test
+    data_root = Path("XAIguiFormer_Project_Scaffold/data/TD-BRAIN-SAMPLE")
+    output_dir = Path("XAIguiFormer_Project_Scaffold/data/TDBRAIN-PRE-PROCESSED/raw/train")  # adapte pour val/test
     subjects = [p.name for p in data_root.iterdir() if p.name.startswith("sub-")]
 
     for subject_id in subjects:
