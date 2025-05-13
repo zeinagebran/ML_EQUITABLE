@@ -116,7 +116,11 @@ def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="
     # 8. Save as .npy
     np.save(save_dir / f"{base}_coherence.npy", coherence)
     np.save(save_dir / f"{base}_wpli.npy", wpli)
-    np.save(save_dir / f"{base}_label.npy", np.array([1]))  # dummy label for now
+    label = get_label(subject_id)
+    if label is None:
+        print(f"❌ Label manquant ou inconnu pour {subject_id}")
+        return
+    np.save(save_dir / f"{base}_label.npy", np.array([label]))
     np.save(save_dir / f"{base}_demographics.npy", np.array([[age, gender]]))
 
     print(f"✅ Saved processed data for {subject_id}")
@@ -142,6 +146,40 @@ def get_demographics(subject_id):
     age = row.iloc[0]['age']
     gender = row.iloc[0]['gender']
     return age, gender
+
+def get_label(subject_id):
+    demo_path = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TD-BRAIN-SAMPLE/participants.tsv")
+    if not demo_path.exists():
+        return None
+    import pandas as pd
+    df = pd.read_csv(demo_path, sep='\t')
+
+    row = df[df['participant_id'] == subject_id]
+    if row.empty and not subject_id.startswith("sub-"):
+        row = df[df['participant_id'] == f"sub-{subject_id.strip()}"]
+
+    if row.empty:
+        print(f"⚠️ Aucun label trouvé pour {subject_id}")
+        return None
+
+    label_text = str(row.iloc[0]['indication']).strip().lower()
+    label_map = {
+        "adhd": 0,
+        "mdd": 1,
+        "ocd": 2,
+        "dyslexia": 3,
+        "chronic pain": 4,
+        "burnout": 5,
+        "smc": 6,
+        "insomnia": 7,
+        "n/a": 8,
+        "replication":9
+    }
+
+    label_encoded = label_map.get(label_text)
+    if label_encoded is None:
+        print(f"⚠️ Label inconnu : {label_text}")
+    return label_encoded
 
 if __name__ == "__main__":
     data_root = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TD-BRAIN-SAMPLE")
