@@ -165,7 +165,11 @@ def get_label(subject_id):
         print(f"⚠️ Aucun label trouvé pour {subject_id}")
         return None
 
-    label_text = str(row.iloc[0]['indication']).strip().lower()
+    raw_label = row.iloc[0]['indication']
+    if pd.isna(raw_label) or str(raw_label).strip().lower() in ('', 'nan', 'none'):
+        label_text = 'n/a'
+    else:
+        label_text = str(raw_label).strip().lower()
     label_map = {
         "adhd": 0,
         "mdd": 1,
