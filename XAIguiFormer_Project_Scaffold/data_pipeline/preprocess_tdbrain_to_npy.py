@@ -72,9 +72,9 @@ def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="
     from mne_connectivity import spectral_connectivity_epochs
 
     con_methods = ["coh", "wpli"]
-    fmin = [4, 8, 13, 30, 4, 10, 2, 18, 13]
-    fmax = [8, 10, 18, 45, 8, 12, 4, 21, 30]
-    bands = ['theta', 'low_alpha', 'low_beta', 'gamma', 'theta_duplicate', 'high_alpha', 'delta', 'mid_beta', 'beta_total']
+    bands = ['delta', 'theta', 'low_alpha', 'high_alpha', 'low_beta', 'mid_beta', 'high_beta', 'low_gamma']
+    fmin = [2, 4, 8, 10, 12, 18, 21, 30]
+    fmax = [4, 8, 10, 12, 18, 21, 30, 45]
     save_dir = output_dir / subject_id
     save_dir.mkdir(exist_ok=True, parents=True)
 
@@ -100,18 +100,21 @@ def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="
     wpli = np.stack(wpli)
     base = f"{subject_id}_EC"
 
-    # 7bis. Compute theta/beta ratio from coherence
+    # 7bis. Compute theta/beta ratio and add it as the 9th band
     def band_power(mat):
         return np.mean(mat)
 
     theta_idx = bands.index('theta')
-    beta_idx = bands.index('beta_total')
-
+    beta_idx = bands.index('high_beta')
     theta_power = band_power(coherence[theta_idx])
     beta_power = band_power(coherence[beta_idx])
     theta_beta_ratio = theta_power / beta_power if beta_power != 0 else 0
 
-    np.save(save_dir / f"{base}_theta_beta_ratio.npy", np.array([theta_beta_ratio]))
+    theta_beta_matrix = np.full((n_channels, n_channels), theta_beta_ratio)
+    coherence = np.concatenate([coherence, theta_beta_matrix[None, :, :]], axis=0)
+    wpli = np.concatenate([wpli, np.zeros((1, n_channels, n_channels))], axis=0)
+
+    bands.append('theta_beta_ratio')
 
     # 8. Save as .npy
     np.save(save_dir / f"{base}_coherence.npy", coherence)

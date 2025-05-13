@@ -44,6 +44,7 @@ This preprocessing pipeline is designed to transform raw EEG data from the TD-BR
      - Mid Beta: 18–21 Hz
      - High Beta: 21–30 Hz
      - Low Gamma: 30–45 Hz
+     - Ratio theta/beta 
 
 8. **Averaging and Saving**
    - All metrics are averaged across epochs.
