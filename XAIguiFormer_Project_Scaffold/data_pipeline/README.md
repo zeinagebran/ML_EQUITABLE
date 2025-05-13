@@ -44,14 +44,14 @@ This preprocessing pipeline is designed to transform raw EEG data from the TD-BR
      - Mid Beta: 18–21 Hz
      - High Beta: 21–30 Hz
      - Low Gamma: 30–45 Hz
-     - Ratio theta/beta 
+     - Theta/Beta Ratio: computed as the ratio between mean theta (4–8 Hz) and high beta (21–30 Hz) power from the coherence matrices. This ratio is added as a 9th band in the output and is a known biomarker of ADHD (Angelidis et al., 2016). The corresponding wPLI matrix for this band is set to zeros.
 
 8. **Averaging and Saving**
    - All metrics are averaged across epochs.
    - The following files are saved:
      - `[subject_id]_EC_coherence.npy`
      - `[subject_id]_EC_wpli.npy`
-     - `[subject_id]_EC_label.npy` containing an integer label corresponding to the subject’s condition. The mapping is:
+     - `[subject_id]_EC_label.npy` containing an integer label corresponding to the subject’s condition. Subjects with missing (`NaN`) or empty `indication` values are automatically labeled as healthy (label `8`). The mapping is:
        - 0: ADHD
        - 1: MDD
        - 2: OCD
@@ -67,8 +67,8 @@ This preprocessing pipeline is designed to transform raw EEG data from the TD-BR
 ## Output Structure
 
 Each subject's folder contains:
-- A 3D numpy array for coherence (shape: [bands, channels, channels])
-- A 3D numpy array for wPLI (shape: [bands, channels, channels])
+- A 3D numpy array for coherence (shape: [9, channels, channels], including theta/beta ratio as last band)
+- A 3D numpy array for wPLI (shape: [9, channels, channels], last band is all zeros for theta/beta ratio)
 - A label file: integer-coded condition as described above
 - A demographics file: `[[age, gender]]`, where gender is 1 for male, 0 for female
 
