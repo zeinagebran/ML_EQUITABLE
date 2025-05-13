@@ -50,7 +50,17 @@ This preprocessing pipeline is designed to transform raw EEG data from the TD-BR
    - The following files are saved:
      - `[subject_id]_EC_coherence.npy`
      - `[subject_id]_EC_wpli.npy`
-     - `[subject_id]_EC_label.npy` (dummy label for now)
+     - `[subject_id]_EC_label.npy` containing an integer label corresponding to the subject’s condition. The mapping is:
+       - 0: ADHD
+       - 1: MDD
+       - 2: OCD
+       - 3: Dyslexia
+       - 4: Chronic Pain
+       - 5: Burnout
+       - 6: SMC
+       - 7: Insomnia
+       - 8: Healthy (label `"n/a"`)
+       - 9: Replication
      - `[subject_id]_EC_demographics.npy`
 
 ## Output Structure
@@ -58,7 +68,7 @@ This preprocessing pipeline is designed to transform raw EEG data from the TD-BR
 Each subject's folder contains:
 - A 3D numpy array for coherence (shape: [bands, channels, channels])
 - A 3D numpy array for wPLI (shape: [bands, channels, channels])
-- A label file (currently dummy)
+- A label file: integer-coded condition as described above
 - A demographics file: `[[age, gender]]`, where gender is 1 for male, 0 for female
 
 # Usage
