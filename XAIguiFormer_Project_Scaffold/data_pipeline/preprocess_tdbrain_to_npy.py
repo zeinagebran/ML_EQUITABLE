@@ -7,6 +7,18 @@ from mne_icalabel import label_components
 from mne.io import read_raw_brainvision
 from pathlib import Path
 
+def restore_full_matrix(vec, n_channels):
+    if vec.shape[0] == n_channels and vec.shape[1] == n_channels:
+        return vec  # matrice déjà carrée
+    elif vec.shape[0] == (n_channels * (n_channels - 1)) // 2:
+        mat = np.zeros((n_channels, n_channels))
+        upper_indices = np.triu_indices(n_channels, k=1)
+        mat[upper_indices] = vec[:, 0]
+        mat += mat.T  # rendre symétrique
+        return mat
+    else:
+        raise ValueError(f"Format inattendu pour la matrice : shape={vec.shape}")
+
 def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="restEC"):
     raw_dir = sub_path / session / "eeg"
     raw_files = list(raw_dir.glob(f"*task-{task}_eeg.vhdr"))
@@ -66,6 +78,8 @@ def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="
     save_dir = output_dir / subject_id
     save_dir.mkdir(exist_ok=True, parents=True)
 
+    n_channels = raw.info['nchan']  # nombre de canaux EEG après nettoyage
+
     coherence = []
     wpli = []
     for band, lo, hi in zip(bands, fmin, fmax):
@@ -74,12 +88,16 @@ def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="
             fmin=lo, fmax=hi, sfreq=raw.info['sfreq'],
             faverage=True, verbose=False
         )
-        coherence.append(conn[0].get_data(output='dense'))  # cohérence
-        wpli.append(conn[1].get_data(output='dense'))       # wPLI
 
-    # 7. Average over epochs
-    coherence = np.stack(coherence).mean(axis=1)
-    wpli = np.stack(wpli).mean(axis=1)
+        coh_matrix = restore_full_matrix(conn[0].get_data(output='dense').squeeze(), n_channels)
+        wpli_matrix = restore_full_matrix(conn[1].get_data(output='dense').squeeze(), n_channels)
+
+        coherence.append(coh_matrix)
+        wpli.append(wpli_matrix)
+
+    # 7. Stack over bands
+    coherence = np.stack(coherence)  # shape: (n_bands, n_channels, n_channels)
+    wpli = np.stack(wpli)
 
     # 8. Save as .npy
     base = f"{subject_id}_EC"
@@ -91,7 +109,7 @@ def preprocess_subject(sub_path, output_dir, subject_id, session="ses-1", task="
     print(f"✅ Saved processed data for {subject_id}")
 
 def get_demographics(subject_id):
-    demo_path = Path("/XAIguiFormer_Project_Scaffold/data/TD-BRAIN-SAMPLE/participants.tsv")
+    demo_path = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TD-BRAIN-SAMPLE/participants.tsv")
     if not demo_path.exists():
         return None, None
     import pandas as pd
@@ -113,8 +131,8 @@ def get_demographics(subject_id):
     return age, gender
 
 if __name__ == "__main__":
-    data_root = Path("XAIguiFormer_Project_Scaffold/data/TD-BRAIN-SAMPLE")
-    output_dir = Path("XAIguiFormer_Project_Scaffold/data/TDBRAIN-PRE-PROCESSED/raw/train")  # adapte pour val/test
+    data_root = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TD-BRAIN-SAMPLE")
+    output_dir = Path("/Users/ghalia/Desktop/Telecom_IA/projet_XAI/data/TDBRAIN-PRE-PROCESSED/raw/train")  # adapte pour val/test
     subjects = [p.name for p in data_root.iterdir() if p.name.startswith("sub-")]
 
     for subject_id in subjects:
