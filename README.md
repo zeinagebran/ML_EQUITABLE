@@ -36,7 +36,13 @@ Classification Head (MLP) + Dual Loss (Eq. 14)      ← implemented by P4
   `xaiguiformer_plan.md`, defines architecture, splits tasks, clarifies logic.
 
 - **P2(Ghalia): Data & Preprocessing**  
-  Implements EEG cleaning + graph construction. Uses MNE + PyPREP. See `data_pipeline/`.
+  Implements the full EEG data pipeline for TDBRAIN. This includes:
+  - Loading BrainVision files with MNE
+  - Cleaning signals using ICA and ICLabel
+  - Extracting 30s epochs
+  - Computing coherence and wPLI in 8 frequency bands
+  - Saving the data and demographics as numpy arrays
+  See `data_pipeline/` and `preprocess_tdbrain_to_npy.py` for implementation.
 
 - **P3&P1(Habibata et Zeina): Model Implementation**  
   Codes `tokenizer.py`, `drofe.py`, `transformer.py`, `xaiguided_transformer.py`, `explainer.py`
