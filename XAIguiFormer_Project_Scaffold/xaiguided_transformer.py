@@ -7,6 +7,16 @@ import torch.nn as nn
 import torch.nn.functional as F
 import math
 
+class RMSNorm(nn.Module):
+    def __init__(self, dim, eps=1e-8):
+        super().__init__()
+        self.eps = eps
+        self.weight = nn.Parameter(torch.ones(dim))
+
+    def forward(self, x):
+        norm = x.norm(dim=-1, keepdim=True) * (1.0 / (x.size(-1) ** 0.5))
+        return self.weight * x / (norm + self.eps)
+
 class XAIGuidedMultiheadAttention(nn.Module):
     def __init__(self, dim, num_heads, drofe_fn=None):
         super().__init__()
@@ -53,8 +63,13 @@ class XAIGuidedTransformerBlock(nn.Module):
         super().__init__()
         self.drofe_fn = drofe_fn
         self.attn = XAIGuidedMultiheadAttention(dim, num_heads)
-        self.norm1 = nn.RMSNorm(dim)
-        self.norm2 = nn.RMSNorm(dim)
+        # self.norm1 = nn.RMSNorm(dim)
+        # self.norm2 = nn.RMSNorm(dim)
+
+        self.norm1 = RMSNorm(dim)
+        self.norm2 = RMSNorm(dim)
+
+
         self.ff = nn.Sequential(
             nn.Linear(dim, 4 * dim),
             nn.GELU(),

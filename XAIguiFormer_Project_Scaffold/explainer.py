@@ -4,6 +4,19 @@ from captum.attr import DeepLift
 import matplotlib.pyplot as plt
 import seaborn as sns
 
+FREQUENCY_BOUNDS = {
+    "Delta": [2, 4],
+    "Theta": [4, 8],
+    "Low Alpha": [8, 10],
+    "High Alpha": [10, 12],
+    "Low Beta": [12, 18],
+    "Mid Beta": [18, 21],
+    "High Beta": [21, 30],
+    "Low Gamma": [30, 45],
+    "Theta/Beta": [4, 30]
+}
+BAND_NAMES = list(FREQUENCY_BOUNDS.keys())
+
 class XAIExplainer:
     def __init__(self, model):
         """
